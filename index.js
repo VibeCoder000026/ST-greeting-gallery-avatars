@@ -189,31 +189,57 @@ function buildUI() {
         if (target) {
             panel = el('div', 'gga-settings extension_container');
             panel.id = 'gga-settings';
-            const heading = el('h4', '', 'Greeting Gallery Avatars');
-            panel.append(heading);
+            // Match SillyTavern's own collapsible extension settings drawers.
+            // Its delegated .inline-drawer-toggle handler controls the chevron
+            // and slides .inline-drawer-content open and closed.
+            const drawer = el('div', 'inline-drawer');
+            const heading = el('div', 'inline-drawer-toggle inline-drawer-header');
+            heading.id = 'gga-settings-toggle';
+            heading.setAttribute('role', 'button');
+            heading.tabIndex = 0;
+            heading.setAttribute('aria-expanded', 'false');
+            heading.setAttribute('aria-controls', 'gga-settings-content');
+            heading.append(el('b', '', 'Greeting Gallery Avatars'));
+            heading.append(el('div', 'inline-drawer-icon fa-solid fa-circle-chevron-down down'));
+            heading.addEventListener('click', () => {
+                // The actual expand/collapse is provided by SillyTavern's
+                // delegated click handler, not a competing custom handler.
+                heading.setAttribute('aria-expanded', String(heading.getAttribute('aria-expanded') !== 'true'));
+            });
+            heading.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    heading.click();
+                }
+            });
+            const content = el('div', 'inline-drawer-content gga-settings-content');
+            content.id = 'gga-settings-content';
+            content.style.display = 'none'; // Start collapsed to save menu space.
+            drawer.append(heading, content);
+            panel.append(drawer);
             const enabled = el('label', 'gga-toggle');
             const enabledBox = el('input'); enabledBox.type = 'checkbox'; enabledBox.checked = settings().enabled;
             enabledBox.addEventListener('change', () => {
                 settings().enabled = enabledBox.checked; saveSettings(); scheduleApply();
             });
             enabled.append(enabledBox, document.createTextNode(' Enable greeting-based avatars'));
-            panel.append(enabled);
+            content.append(enabled);
             const replies = el('label', 'gga-toggle');
             const repliesBox = el('input'); repliesBox.type = 'checkbox'; repliesBox.checked = settings().includeReplies;
             repliesBox.addEventListener('change', () => {
                 settings().includeReplies = repliesBox.checked; saveSettings(); scheduleApply();
             });
             replies.append(repliesBox, document.createTextNode(' Apply to all character replies'));
-            panel.append(replies);
+            content.append(replies);
             const tiles = el('label', 'gga-toggle');
             const tilesBox = el('input'); tilesBox.type = 'checkbox'; tilesBox.checked = settings().includeListTile;
             tilesBox.addEventListener('change', () => {
                 settings().includeListTile = tilesBox.checked; saveSettings(); scheduleApply();
             });
             tiles.append(tilesBox, document.createTextNode(' Also change selected character-list tile'));
-            panel.append(tiles);
-            panel.append(button('Map greeting images…', openMapper));
-            panel.append(el('p', 'gga-note', 'Images are sourced from the built-in character gallery. Original character cards are not modified.'));
+            content.append(tiles);
+            content.append(button('Map greeting images…', openMapper));
+            content.append(el('p', 'gga-note', 'Images are sourced from the built-in character gallery. Original character cards are not modified.'));
             target.append(panel);
         }
     }

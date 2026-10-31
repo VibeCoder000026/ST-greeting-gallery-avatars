@@ -1,5 +1,7 @@
 # Greeting Gallery Avatars — SillyTavern extension
 
+**Version 1.1.0** — Settings now use SillyTavern's native collapsible drawer, closed by default.
+
 Choose a different **actual chat avatar** for each first message / alternate greeting. Images come directly from SillyTavern's **existing Character Gallery**, including custom gallery-folder overrides. Changes apply when you swipe the first message and when you reopen a saved chat. No AI image generation, plugins, or server modifications required.
 
 ## Installation
@@ -16,7 +18,7 @@ Keep `manifest.json`, `index.js`, `logic.mjs`, and `style.css` directly inside t
 
 1. Select a **single character** (this extension does not target group chats).
 2. Open **Extensions → Show Gallery** (or the character's Gallery option), and add the portraits you want.
-3. Open **Extensions → Greeting Gallery Avatars** (or the extension's Settings panel → **Map greeting images…**).
+3. Open **Extensions → Greeting Gallery Avatars** (or expand **Greeting Gallery Avatars** in the Extensions settings panel, then click **Map greeting images…**).
 4. Choose **Main greeting** or an **Alternate greeting** on the left.
 5. Click an image on the right to assign it. Choosing **Use original card avatar** clears that greeting's override.
 6. Close the mapper, then swipe the **first** message to change the portrait. You can also switch to an existing chat: its current first-message swipe determines the portrait.
@@ -24,6 +26,8 @@ Keep `manifest.json`, `index.js`, `logic.mjs`, and `style.css` directly inside t
 Use **Refresh images** after adding or removing gallery images. If a mapped gallery image is deleted, the avatar falls back to the original card image.
 
 ## Settings
+
+In the Extensions settings panel, click the **Greeting Gallery Avatars** header or chevron to expand/collapse the options. The section starts **collapsed** to avoid taking up menu space. You can also focus the header and press Enter or Space. Collapsing the settings does **not** disable avatar switching.
 
 - **Enable greeting-based avatars**: globally enable/disable the feature.
 - **Apply to all character replies** (default on): use the selected greeting's portrait throughout the conversation; turn off to change only the first message's avatar.

@@ -1,5 +1,6 @@
-.gga-settings { padding: 10px; border: 1px solid var(--SmartThemeBorderColor, #555); border-radius: 8px; }
-.gga-settings h4 { margin: 0 0 10px; }
+.gga-settings { margin-bottom: 8px; }
+.gga-settings .gga-settings-content { padding: 0 10px 10px; }
+.gga-settings .inline-drawer-header { cursor: pointer; }
 .gga-toggle { display: flex; gap: 8px; align-items: center; margin: 8px 0; cursor: pointer; }
 .gga-button { cursor: pointer; border: 1px solid var(--SmartThemeBorderColor, #888); border-radius: 7px; padding: 7px 10px; background: var(--SmartThemeBlurTintColor, #292929); color: var(--SmartThemeBodyColor, white); font: inherit; }
 .gga-button:hover { filter: brightness(1.15); }
