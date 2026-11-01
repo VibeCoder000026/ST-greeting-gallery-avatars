@@ -4,20 +4,11 @@
 
 Choose a different **actual chat avatar** for each first message / alternate greeting. Images come directly from SillyTavern's **existing Character Gallery**, including custom gallery-folder overrides. Changes apply when you swipe the first message and when you reopen a saved chat. No AI image generation, plugins, or server modifications required.
 
-## Installation
-
-Download and extract the zip, then copy its `greeting-gallery-avatars` folder to:
-
-```
-SillyTavern/public/scripts/extensions/third-party/greeting-gallery-avatars/
-```
-
-Keep `manifest.json`, `index.js`, `logic.mjs`, and `style.css` directly inside that folder. Restart SillyTavern and reload the browser page. The **Install extension** UI requires a *Git repository URL*; a local zip is not a Git URL. You can publish the included folder to your own Git repository if you prefer installing via the UI.
 
 ## Usage
 
 1. Select a **single character** (this extension does not target group chats).
-2. Open **Extensions → Show Gallery** (or the character's Gallery option), and add the portraits you want.
+2. Open **Character Card → More → Show Gallery**, and add the portraits you want.
 3. Open **Extensions → Greeting Gallery Avatars** (or expand **Greeting Gallery Avatars** in the Extensions settings panel, then click **Map greeting images…**).
 4. Choose **Main greeting** or an **Alternate greeting** on the left.
 5. Click an image on the right to assign it. Choosing **Use original card avatar** clears that greeting's override.
