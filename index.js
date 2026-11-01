@@ -3,6 +3,9 @@
  * Uses the built-in gallery's folder overrides and /api/images/list endpoint.
  * Changes only rendered image elements; does NOT rewrite a card/avatar PNG.
  */
+import { animation_duration } from '../../../../script.js';
+import { dragElement } from '../../../RossAscends-mods.js';
+import { loadMovingUIState, power_user } from '../../../power-user.js';
 import {
     greetingSlots, selectedGreetingIndex, galleryFolder, isImageFilename,
     galleryImageUrl, isCharacterMessage,
@@ -406,9 +409,50 @@ function onGalleryAvatarClick(e) {
     const img = avatar?.querySelector('img[data-gga-mapped-src]');
     if (!img) return;
     // ST's built-in zoom assumes avatar URLs come from /thumbnail?file=...;
-    // gallery paths don't follow that format, so intercept those clicks.
+    // reuse its viewer and UI helpers, but supply the gallery URL directly.
     e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-    window.open(img.dataset.ggaMappedSrc, '_blank', 'noopener,noreferrer');
+    // Keep ST's original character identity so native and mapped avatars toggle
+    // the same panel and share saved Moving UI position/size.
+    const originalSrc = img.dataset.ggaOriginalSrc;
+    const charname = originalSrc.substring(originalSrc.lastIndexOf('=') + 1).replace('.png', '');
+    const zoomedAvatars = jQuery('.zoomed_avatar');
+    if (!power_user.movingUI) {
+        zoomedAvatars.filter(function () {
+            const forChar = jQuery(this).attr('forChar');
+            return forChar !== undefined && forChar !== charname;
+        }).remove();
+    }
+    const existing = zoomedAvatars.filter(function () {
+        return jQuery(this).attr('forChar') === charname;
+    });
+    if (existing.length) {
+        existing.fadeOut(animation_duration, () => existing.remove());
+        return;
+    }
+
+    const viewer = jQuery(jQuery('#zoomed_avatar_template').html());
+    const viewerId = `zoomFor_${charname}`;
+    viewer.attr('forChar', charname).attr('id', viewerId).addClass('draggable');
+    viewer.find('.drag-grabber').attr('id', `${viewerId}header`);
+    const zoomedImage = viewer.find('img');
+    zoomedImage.attr('src', img.dataset.ggaMappedSrc);
+    zoomedImage.attr('data-izoomify-url', img.dataset.ggaMappedSrc);
+    zoomedImage.attr('alt', img.alt);
+    jQuery('body').append(viewer);
+    viewer.fadeIn(animation_duration);
+    loadMovingUIState();
+    viewer.css('display', 'flex');
+    dragElement(viewer);
+
+    if (power_user.zoomed_avatar_magnification) {
+        viewer.find('.zoomed_avatar_container').izoomify();
+    }
+    viewer.on('click touchend', event => {
+        if (event.target.closest('.dragClose')) {
+            viewer.fadeOut(animation_duration, () => viewer.remove());
+        }
+    });
+    zoomedImage.on('dragstart', event => event.preventDefault());
 }
 function onEscape(e) {
     if (e.key === 'Escape' && modal && !modal.hidden) { e.stopPropagation(); closeMapper(); }
