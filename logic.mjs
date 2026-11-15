@@ -16,9 +16,17 @@ export function greetingSlots(character) {
     return slots;
 }
 
+function canUseCharacterAvatar(message) {
+    // Summaryception marks original messages before /hide sets is_system.
+    // They still belong to the same speaker; only their prompt visibility changed.
+    const isSummaryceptionGhost = message?.extra?.sc_ghosted === true;
+    return Boolean(message && !message.is_user && !message.force_avatar &&
+        (!message.is_system || isSummaryceptionGhost));
+}
+
 export function selectedGreetingIndex(chat) {
     const first = chat?.[0];
-    if (!first || first.is_user || first.is_system || first.force_avatar) return null;
+    if (!canUseCharacterAvatar(first)) return null;
     const raw = Number(first.swipe_id ?? 0);
     return Number.isInteger(raw) && raw >= 0 ? raw : 0;
 }
@@ -41,6 +49,5 @@ export function galleryImageUrl(sanitizedFolder, filename) {
 }
 
 export function isCharacterMessage(message, character) {
-    return Boolean(message && character && !message.is_user && !message.is_system &&
-        !message.force_avatar && message.name === character.name);
+    return Boolean(character && canUseCharacterAvatar(message) && message.name === character.name);
 }

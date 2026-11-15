@@ -494,6 +494,8 @@ function bindEvents() {
             const avatarWasChanged = records.some(r => {
                 if (r.type === 'attributes') {
                     return r.attributeName === 'swipeid' ||
+                        // ST /hide and /unhide update this attribute without a render event.
+                        (r.attributeName === 'is_system' && r.target.matches?.('.mes')) ||
                         (r.attributeName === 'src' && r.target.matches?.('.mesAvatarWrapper .avatar img, .mes .avatar img'));
                 }
                 // Ignore streaming text mutations; only newly-rendered avatars matter.
@@ -502,7 +504,7 @@ function bindEvents() {
             });
             if (avatarWasChanged) scheduleApply();
         });
-        chatObserver.observe(chat, { childList: true, subtree: true, attributes: true, attributeFilter: ['src', 'swipeid'] });
+        chatObserver.observe(chat, { childList: true, subtree: true, attributes: true, attributeFilter: ['src', 'swipeid', 'is_system'] });
     }
     document.addEventListener('click', onGalleryAvatarClick, true);
     document.addEventListener('keydown', onEscape, true);
